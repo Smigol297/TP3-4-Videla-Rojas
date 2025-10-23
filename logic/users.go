@@ -55,7 +55,6 @@ func getUsers(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
 		return
 	}
 }
-
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	db := connectDB()
 	defer db.Close()
@@ -69,7 +68,6 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 	}
 }
-
 func createUser(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
 	var p sqlc.CreateUsuarioParams
 

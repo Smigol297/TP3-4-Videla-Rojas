@@ -168,7 +168,6 @@ func (q *Queries) GetUsuarioById(ctx context.Context, idUsuario int32) (Usuario,
 const listTarjetas = `-- name: ListTarjetas :many
 SELECT id_tarjeta, pregunta, respuesta, opcion_a, opcion_b, opcion_c, id_tema 
 FROM Tarjeta
-ORDER BY random()
 `
 
 func (q *Queries) ListTarjetas(ctx context.Context) ([]Tarjetum, error) {
