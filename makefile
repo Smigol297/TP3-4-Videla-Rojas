@@ -2,27 +2,32 @@ BINARY=myapp
 
 # Compilar
 build:
-	go build -o $(BINARY) .
+	@echo ">= Building application..."
+	@go build -o $(BINARY) .
 
 # Ejecutar servidor
 run: build
-	./$(BINARY) & echo $$! > server.pid
-	sleep 1
+	@air
 # Ejecutar getProducts
 listUsuarios:
-	curl http://localhost:8080/listUsuarios
-# Crear Usuario
+	curl -X GET http://localhost:8080/users
+# Crear Usuario nombre="Juan Perez" email="mail@example.com" contrasena="securepassword" por ejemplo
 createUsuario:
-	curl -X POST http://localhost:8080/createUsuario \
-	
-#-H "Content-Type: application/json" \
-#-d '{"nombre":"Juan Perez","email":"mail@example.com","contrasena":"password123"}'
+	curl -X POST http://localhost:8080/users \
+	-H "Content-Type: application/json" \
+	-d '{"nombre_usuario":"$(nombre)","email":"$(email)","contrasena":"$(contrasena)"}'
+
+
+
 
 add-products:
 	# Agregar productos de ejemplo
 	curl -X POST http://localhost:8080/products \
 	-H "Content-Type: application/json" \
-	-d '{"name":"LaptopNueva","description":"Laptop 16GB RAM","price":3500,"quantity":10}'
+	-d '{"name":"LaptopNueva",
+	"description":"Laptop 16GB RAM",
+	"price":3500,
+	"quantity":10}'
 
 	curl -X POST http://localhost:8080/products \
 	-H "Content-Type: application/json" \
@@ -55,16 +60,3 @@ test-ids:
 # Ejecutar flujo completo
 all: run get-products add-productstest-ids get-products stop clean
 
-# Limpiar binarios
-clean:
-	rm -f $(BINARY)
-
-stop:
-	@if [ -f server.pid ]; then \
-		kill $$(cat server.pid); \
-		rm -f server.pid; \
-	else \
-		 "No se encontró server.pid, utilizar lsoft -i :8080 para buscar el proceso y luego kill 'PID' para matarlo"; \
-	fi
-
-reboot: stop run
