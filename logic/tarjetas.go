@@ -15,19 +15,19 @@ import (
 // INICIO CON MAYUSCULA = PUBLICO
 func ValidateCreateTarjeta(p sqlc.CreateTarjetaParams) error {
 	if p.Pregunta == "" {
-		return fmt.Errorf("La pregunta no puede estar vacía")
+		return fmt.Errorf("la pregunta no puede estar vacía")
 	}
 	if p.Respuesta == "" {
-		return fmt.Errorf("La respuesta no puede estar vacía")
+		return fmt.Errorf("la respuesta no puede estar vacía")
 	}
 	if p.OpcionA == "" {
-		return fmt.Errorf("La opción A no puede estar vacía")
+		return fmt.Errorf("la opción A no puede estar vacía")
 	}
 	if p.OpcionB == "" {
-		return fmt.Errorf("La opción B no puede estar vacía")
+		return fmt.Errorf("la opción B no puede estar vacía")
 	}
 	if p.OpcionC == "" {
-		return fmt.Errorf("La opción C no puede estar vacía")
+		return fmt.Errorf("la opción C no puede estar vacía")
 	}
 	if p.IDTema <= 0 {
 		return fmt.Errorf("ID de tema inválido")
@@ -39,19 +39,19 @@ func ValidateUpdateTarjeta(p sqlc.UpdateTarjetaParams) error {
 		return fmt.Errorf("ID de tarjeta %d inválido", p.IDTarjeta)
 	}
 	if p.Pregunta == "" {
-		return fmt.Errorf("La pregunta no puede estar vacía")
+		return fmt.Errorf("la pregunta no puede estar vacía")
 	}
 	if p.Respuesta == "" {
-		return fmt.Errorf("La respuesta no puede estar vacía")
+		return fmt.Errorf("la respuesta no puede estar vacía")
 	}
 	if p.OpcionA == "" {
-		return fmt.Errorf("La opción A no puede estar vacía")
+		return fmt.Errorf("la opción A no puede estar vacía")
 	}
 	if p.OpcionB == "" {
-		return fmt.Errorf("La opción B no puede estar vacía")
+		return fmt.Errorf("la opción B no puede estar vacía")
 	}
 	if p.OpcionC == "" {
-		return fmt.Errorf("La opción C no puede estar vacía")
+		return fmt.Errorf("la opción C no puede estar vacía")
 	}
 	if p.IDTema <= 0 {
 		return fmt.Errorf("ID de tema inválido")
@@ -66,6 +66,7 @@ func TarjetasHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		temaStr := r.URL.Query().Get("tema") // obtiene el parámetro "tema"
+		//GET /tarjetas
 		if temaStr == "" {
 			getTarjetas(w, r, queries)
 			return
@@ -76,9 +77,9 @@ func TarjetasHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "ID de tarjeta inválido", http.StatusBadRequest)
 			return
 		}
-
+		//GET /tarjetas?tema=1
 		getTarjetasByTema(w, r, tema, queries)
-
+	//POST /tarjetas
 	case http.MethodPost:
 		createTarjeta(w, r, queries)
 	default:
@@ -139,10 +140,11 @@ func createTarjeta(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json") // <- Servidor dice: "Te voy a enviar JSON"
+	w.WriteHeader(http.StatusCreated)                  // <- Servidor dice: "Operación exitosa, recurso creado (201)"
+
 	// Enviar los datos como JSON válido
-	if err := json.NewEncoder(w).Encode(newTarjeta); err != nil {
+	if err := json.NewEncoder(w).Encode(newTarjeta); err != nil { // <- Servidor ENVÍA los datos al cliente
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -161,10 +163,13 @@ func TarjetasByIDHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch r.Method {
+	//GET/tarjetas=1
 	case http.MethodGet:
 		getTarjetaByID(w, r, id, queries)
+	//PUT/tarjetas=1
 	case http.MethodPut:
 		putTarjetaByID(w, r, id, queries)
+	//DELETE/tarjetas=1
 	case http.MethodDelete:
 		deleteTarjetaByID(w, r, id, queries)
 	default:

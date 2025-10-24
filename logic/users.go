@@ -14,13 +14,13 @@ import (
 // INICIO CON MAYUSCULA = PUBLICO
 func ValidateCreateUser(p sqlc.CreateUsuarioParams) error {
 	if p.NombreUsuario == "" {
-		return fmt.Errorf("El nombre del usuario no puede estar vacío")
+		return fmt.Errorf("el nombre del usuario no puede estar vacío")
 	}
 	if p.Email == "" {
-		return fmt.Errorf("El email del usuario no puede estar vacío")
+		return fmt.Errorf("el email del usuario no puede estar vacío")
 	}
 	if p.Contrasena == "" {
-		return fmt.Errorf("La contraseña del usuario no puede estar vacía")
+		return fmt.Errorf("la contraseña del usuario no puede estar vacía")
 	}
 	return nil
 }
@@ -29,13 +29,13 @@ func ValidateUpdateUser(p sqlc.UpdateUsuarioParams) error {
 		return fmt.Errorf("ID de usuario %d inválido", p.IDUsuario)
 	}
 	if p.NombreUsuario == "" {
-		return fmt.Errorf("El nombre del usuario no puede estar vacío")
+		return fmt.Errorf("el nombre del usuario no puede estar vacío")
 	}
 	if p.Email == "" {
-		return fmt.Errorf("El email del usuario no puede estar vacío")
+		return fmt.Errorf("el email del usuario no puede estar vacío")
 	}
 	if p.Contrasena == "" {
-		return fmt.Errorf("La contraseña del usuario no puede estar vacía")
+		return fmt.Errorf("la contraseña del usuario no puede estar vacía")
 	}
 	return nil
 }
@@ -59,9 +59,12 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	db := connectDB()
 	defer db.Close()
 	queries := sqlc.New(db)
+	// Revisa el MÉTODO HTTP (GET, POST, etc.)
 	switch r.Method {
+	// SI ES GET /users -> Listar todos los usuarios
 	case http.MethodGet:
 		getUsers(w, r, queries)
+	// SI ES POST /users -> Crear un nuevo usuario
 	case http.MethodPost:
 		createUser(w, r, queries)
 	default:
