@@ -55,6 +55,7 @@ testUsers:
 	echo "=== Listar usuarios final ==="; \
 	curl -s http://localhost:8080/users | jq
 
+# Ejecutar tarjetas
 listTarjetas:
 	@curl -s http://localhost:8080/tarjetas | jq
 listTarjetasByTema:
@@ -116,6 +117,49 @@ testTarjetas:
 	echo "=== Listar tarjetas final ==="; \
 	curl -s http://localhost:8080/tarjetas | jq;
 
+# Ejecutar temas
+listTemas:
+	@curl -s http://localhost:8080/temas | jq
+createTema:
+	@curl -X POST http://localhost:8080/temas \
+	-d '{"nombre_tema":"$(nombre)"}'
+getTemaByID:
+	@curl -X GET http://localhost:8080/temas/$(id) | jq
+putTemaByID:
+	@curl -X PUT http://localhost:8080/temas/$(id) \
+	-H "Content-Type: application/json" \
+	-d '{"nombre_tema":"$(nombre)"}'
+deleteTemaByID:
+	@curl -X DELETE http://localhost:8080/temas/$(id)
+testTemas:
+	@echo "=== Listar temas inicial ==="
+	@curl -s http://localhost:8080/temas | jq
+	@echo "=== Crear tema 1 ==="
+	@ID1=$$(curl -s -X POST http://localhost:8080/temas \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_tema":"Geografía"}' | jq -r '.id_tema'); \
+	echo "Tema 1 ID: $$ID1"; \
+	echo "=== Crear tema 2 ==="; \
+	ID2=$$(curl -s -X POST http://localhost:8080/temas \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_tema":"Ciencia"}' | jq -r '.id_tema'); \
+	echo "Tema 2 ID: $$ID2"; \
+	echo "=== Listar temas después de crear ==="; \
+	curl -s http://localhost:8080/temas | jq; \
+	echo "=== Obtener tema 1 ==="; \
+	curl -s http://localhost:8080/temas/$$ID1 | jq; \
+	echo "=== Actualizar tema 1 ==="; \
+	curl -s -X PUT http://localhost:8080/temas/$$ID1 \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_tema":"Geografía Actualizada"}' | jq; \
+	echo "=== Listar temas después de actualizar ==="; \
+	curl -s http://localhost:8080/temas | jq; \
+	echo "=== Eliminar tema 1 ==="; \
+	curl -s -X DELETE http://localhost:8080/temas/$$ID1; \
+	echo "=== Eliminar tema 2 ==="; \
+	curl -s -X DELETE http://localhost:8080/temas/$$ID2; \
+	echo "=== Listar temas final ==="; \
+	curl -s http://localhost:8080/temas | jq
 # Ejecutar flujo completo
 all: run testUsers testTarjetas
 

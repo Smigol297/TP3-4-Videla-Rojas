@@ -12,5 +12,7 @@ func main() {
 	http.HandleFunc("/users/{id}", logic.UsersByIDHandler)
 	http.HandleFunc("/tarjetas", logic.TarjetasHandler) // Mapea la ruta /tarjetas a la función TarjetasHandler del paquete logic
 	http.HandleFunc("/tarjetas/{id}", logic.TarjetasByIDHandler)
-	initServer()
+	http.HandleFunc("/temas", logic.TemasHandler) // Mapea la ruta /temas a la función TemasHandler del paquete logic
+	http.HandleFunc("/temas/{id}", logic.TemasByIDHandler)
+	logic.InitServer()
 }

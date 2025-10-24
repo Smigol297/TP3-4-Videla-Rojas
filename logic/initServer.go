@@ -1,11 +1,11 @@
-package main
+package logic
 
 import (
 	"fmt"
 	"net/http"
 )
 
-func initServer() {
+func InitServer() {
 	// Define el puerto y muestra un mensaje en consola
 	port := ":8080"
 	fmt.Printf("Servidor escuchando en http://localhost%s\n", port)
