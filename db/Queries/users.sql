@@ -37,8 +37,7 @@ ORDER BY random();
 
 -- name: ListTarjetas :many
 SELECT id_tarjeta, pregunta, respuesta, opcion_a, opcion_b, opcion_c, id_tema 
-FROM Tarjeta
-ORDER BY random();
+FROM Tarjeta;
 
 -- name: CreateTarjeta :one
 INSERT INTO Tarjeta (pregunta, respuesta, opcion_a, opcion_b, opcion_c, id_tema)
