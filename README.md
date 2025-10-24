@@ -1,31 +1,11 @@
-# TP2 - Videla Rojas
+# TP3/4 - Videla Rojas
 
 ## 📌 Requisitos
 
 ### 1. Golang
-
-```bash
-sudo apt update
-sudo apt install golang -y
-```
-
 ### 2. Docker
-
-```bash
-sudo apt update
-sudo apt install docker.io -y
-sudo systemctl enable --now docker
-sudo usermod -aG docker $USER  # ⚠️ Cierra sesión y vuelve a iniciar para aplicar los cambios de grupo.
-```
-
 ### 3. SQLC
-
-```bash
-go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-ls $HOME/go/bin/sqlc
-echo 'export PATH=$PATH:$HOME/go/bin' >> ~/.bashrc
-source ~/.bashrc
-```
+### 4. Air live reloaded
 
 ## 🚀 Instalación y ejecución del proyecto
 
@@ -36,37 +16,97 @@ git clone https://github.com/Smigol297/TP2-Videla-Rojas
 cd TP2-Videla-Rojas
 ```
 
-2. Iniciar contenedores Docker
+2. Iniciar 
 
 ```bash
-docker compose up -d       # ejecuta en segundo plano
-docker compose up           # ejecuta en primer plano y muestra logs
+make run
 ```
 
-3. Instalar dependencias de Go
-
+## 📝 Tests
+Ejecutar todos los tests
 ```bash
-go mod tidy
+make allTests
 ```
-
-4. Generar código Go desde SQL
-
+Test usuarios
 ```bash
-sqlc generate
+make testUsers
 ```
-
-5. Compilar la aplicación
-
+Test tarjetas
 ```bash
-go build
+make testTarjetas
 ```
-
-6. Ejecutar la aplicación
-
+Test temas
 ```bash
-./tp2
+make testTemas
 ```
-
+## 📝 Comandos individuales
+### Usuarios
+Listar usuarios
+```bash
+make listUsuarios
+```
+Crear usuario
+```bash
+make createUsuario
+```
+Obtener usuario por ID
+```bash
+make getUserByID
+```
+Modificar usuario por ID
+```bash
+make putUserByID
+```
+Eliminar usuario por ID
+```bash
+make deleteUserByID
+```
+### Tarjetas
+Listar tarjetas
+```bash
+make listTarjetas
+```
+Listar tarjetas por tema
+```bash
+make listTarjetasByTema
+```
+Crear tarjeta
+```bash
+make createTarjeta
+```
+Obtener tarjeta por ID
+```bash
+make getTarjetaByID
+```
+Modificar tarjeta por ID
+```bash
+make putTarjetaByID
+```
+Eliminar tarjeta por ID
+```bash
+make deleteTarjetaByID
+```
+### Temas
+Listar temas
+```bash
+make listTemas
+```
+Crear tema
+```bash
+make createTema
+```
+Obtener tema por ID
+```bash
+make getTemaByID
+```
+Modificar tema por ID
+```bash
+make putTemaByID
+```
+Eliminar tema por ID
+```bash
+make deleteTemaByID
+```
 ## 🛑 Detener contenedores
 
 ```bash
