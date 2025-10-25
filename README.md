@@ -12,8 +12,8 @@
 1. Clonar el proyecto
 
 ```bash
-git clone https://github.com/Smigol297/TP2-Videla-Rojas
-cd TP2-Videla-Rojas
+git clone https://github.com/Smigol297/TP3-4-Videla-Rojas
+cd TP3-4-Videla-Rojas
 ```
 
 2. Iniciar 
@@ -108,9 +108,8 @@ Eliminar tema por ID
 make deleteTemaByID
 ```
 ## 🛑 Detener contenedores
-
+Detener docker
 ```bash
-docker compose down        # detiene contenedores
-docker compose down -v     # detiene contenedores y borra volúmenes
+make down
 ```
 

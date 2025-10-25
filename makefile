@@ -4,10 +4,21 @@ BINARY=myapp
 build:
 	@echo ">= Building application..."
 	@go build -o $(BINARY) .
-
+# Levantar servicios con Docker Compose
+up:
+	@docker compose up -d
+# Generar código con sqlc
+sqlc: db/Schema/*.sql db/Queries/*.sql
+	@sqlc generate
+# Actualizar dependencias
+tidy: go.mod go.sum
+	@go mod tidy
 # Ejecutar servidor
-run: build
+run: up tidy sqlc build
 	@air
+down:
+	@docker compose down
+	@rm -rf $(BINARY)
 # Ejecutar getUsers
 listUsuarios:
 	@curl -s http://localhost:8080/users | jq
@@ -161,6 +172,6 @@ testTemas:
 	echo "=== Listar temas final ==="; \
 	curl -s http://localhost:8080/temas | jq
 # Ejecutar flujo completo
-all: run testUsers testTarjetas
+allTests: testUsers testTarjetas testTemas
 
 
