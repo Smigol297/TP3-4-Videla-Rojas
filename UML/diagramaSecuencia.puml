@@ -1,0 +1,27 @@
+@startuml
+Usuario -> Servidor : login(credenciales)
+Servidor -> BaseDatos : obtenerDatosUsuario()
+BaseDatos --> Servidor : datosUsuario
+Servidor --> Usuario : resultadoValidacion
+newpage
+Usuario -> Servidor : registrar(credenciales)
+Servidor -> BaseDatos : registrarUsuario(credenciales)
+BaseDatos --> Servidor : resultadoVerificacion
+Servidor --> Usuario : resultadoValidacion
+newpage
+loop mientras quiera agregar tarjetas  
+Usuario -> Servidor : ingresarTarjeta(tema,datosTarjeta)  
+Servidor -> BaseDatos : crearTarjeta(datosTarjeta)  
+Servidor --> Usuario : resultadoCreacion
+end loop
+newpage
+Usuario -> Servidor : getTarjetas(tema)
+Servidor -> BaseDatos : obtenerTarjetas()
+BaseDatos --> Servidor : listaTarjetasAleatoria
+Servidor --> Usuario : HTML con Tarjetas
+loop mientras haya tarjetas 
+Usuario -> Usuario : responder(tarjetaAleatoria)
+end loop
+Usuario -> Servidor : enviarRespuestas()
+Servidor --> Usuario : resultado
+@enduml

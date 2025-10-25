@@ -1,0 +1,24 @@
+@startuml
+' Definición de entidades / tablas
+entity Tema {
+    + id_tema : int <<generado>>  
+    nombre_ema : varchar
+}
+entity Tarjeta {
+    + id_tarjeta : int <<generado>>  
+    * id_tema : int   <<FK>>  
+    pregunta : varchar  
+    opcionA : varchar  
+    opcionB : varchar  
+    opcionC : varchar  
+    respuesta : varchar
+    }
+entity Usuario {
+  + id_usuario : int <<generado>>
+  nombre_usuario : varchar
+  email : varchar
+  contrasena : varchar
+}
+' Relaciones
+Tema ||--o{ Tarjeta : contiene
+@enduml

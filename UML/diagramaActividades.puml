@@ -1,0 +1,36 @@
+@startuml
+start
+if (Usuario existente?) then (sí)
+  :Login usuario;
+  :Solicitar datos usuario;
+  if (Credenciales correctas?) then (no)
+    :Mostrar error de login;
+    stop
+  endif
+else (no)
+  :Registrar usuario;
+  if (Datos válidos?) then (no)
+    :Mostrar error al registrar;
+    stop
+  endif
+endif
+:Seleccionar tema;
+if (Desea agregar Tarjetas?) then (sí)
+  repeat
+    :Solicitar datos de tarjeta;
+    if (Tarjeta válida?) then (sí)
+      :Agregar tarjeta;
+    else (no)
+      :Mostrar error de tarjeta;
+    endif
+  repeat while (Mas tarjetas?)
+else (no)
+endif
+:Comenzar estudio;
+repeat
+  :Mostrar tarjeta aleatoria;
+  :Usuario responde;
+repeat while (existen mas tarjetas?)
+:Mostrar resultados finales;
+stop
+@enduml

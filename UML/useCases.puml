@@ -1,0 +1,8 @@
+@startuml
+left to right direction
+:Usuario: --> (responder preguntas)
+(responder preguntas) -.> (ingresar preguntas)
+:Usuario: --> (ingresar preguntas)
+:Usuario: --> (loguearse)
+:Usuario: -->(registrarse)
+@enduml
