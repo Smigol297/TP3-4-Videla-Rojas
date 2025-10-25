@@ -90,18 +90,18 @@ testTarjetas:
 	@echo "=== Crear tarjeta 1 ==="
 	@ID1=$$(curl -s -X POST http://localhost:8080/tarjetas \
 	  -H "Content-Type: application/json" \
-	  -d '{"pregunta":"¿Capital de Francia?","respuesta":"París","opcion_a":"Londres","opcion_b":"Berlín","opcion_c":"Madrid","id_tema":1}' | jq -r '.id_tarjeta'); \
+	  -d '{"pregunta":"¿Capital de Francia?","respuesta":"Paris","opcion_a":"Londres","opcion_b":"Paris","opcion_c":"Madrid","id_tema":1}' | jq -r '.id_tarjeta'); \
 	echo "Tarjeta 1 ID: $$ID1"; \
 	echo "=== Crear tarjeta 2 ==="; \
 	ID2=$$(curl -s -X POST http://localhost:8080/tarjetas \
 	  -H "Content-Type: application/json" \
-	  -d '{"pregunta":"¿Capital de España?","respuesta":"Madrid","opcion_a":"Barcelona","opcion_b":"Valencia","opcion_c":"Sevilla","id_tema":1}' | jq -r '.id_tarjeta'); \
+	  -d '{"pregunta":"¿Capital de España?","respuesta":"Madrid","opcion_a":"Barcelona","opcion_b":"Valencia","opcion_c":"Madrid","id_tema":1}' | jq -r '.id_tarjeta'); \
 	ID3=$$(curl -s -X POST http://localhost:8080/tarjetas \
       -H "Content-Type: application/json" \
-      -d '{"pregunta":"¿Cuál es el río más largo del mundo?","respuesta":"Nilo","opcion_a":"Amazonas","opcion_b":"Yangtsé","opcion_c":"Misisipi","id_tema":3}' | jq -r '.id_tarjeta'); \
+      -d '{"pregunta":"¿Cuál es el río más largo del mundo?","respuesta":"Nilo","opcion_a":"Amazonas","opcion_b":"Nilo","opcion_c":"Misisipi","id_tema":3}' | jq -r '.id_tarjeta'); \
 	ID4=$$(curl -s -X POST http://localhost:8080/tarjetas \
       -H "Content-Type: application/json" \
-      -d '{"pregunta":"¿Qué planeta es conocido como el planeta rojo?","respuesta":"Marte","opcion_a":"Júpiter","opcion_b":"Venus","opcion_c":"Saturno","id_tema":3}' | jq -r '.id_tarjeta'); \
+      -d '{"pregunta":"¿Qué planeta es conocido como el planeta rojo?","respuesta":"Marte","opcion_a":"Júpiter","opcion_b":"Venus","opcion_c":"Marte","id_tema":3}' | jq -r '.id_tarjeta'); \
 	echo "Tarjeta 2 ID: $$ID2"; \
 	echo "Tarjeta 3 ID: $$ID3"; \
 	echo "Tarjeta 4 ID: $$ID4"; \
