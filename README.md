@@ -108,9 +108,8 @@ Eliminar tema por ID
 make deleteTemaByID
 ```
 ## 🛑 Detener contenedores
-
+Detener docker
 ```bash
-docker compose down        # detiene contenedores
-docker compose down -v     # detiene contenedores y borra volúmenes
+make down
 ```
 
