@@ -173,5 +173,3 @@ testTemas:
 	curl -s http://localhost:8080/temas | jq
 # Ejecutar flujo completo
 allTests: testUsers testTarjetas testTemas
-
-

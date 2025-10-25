@@ -14,7 +14,7 @@ import (
 // INICIO CON MAYUSCULA = PUBLICO
 func ValidateCreateTema(nombre string) error {
 	if nombre == "" {
-		return fmt.Errorf("El nombre del tema no puede estar vacío")
+		return fmt.Errorf("el nombre del tema no puede estar vacío")
 	}
 	return nil
 }
@@ -23,7 +23,7 @@ func ValidateUpdateTema(p sqlc.UpdateTemaParams) error {
 		return fmt.Errorf("ID de tema %d inválido", p.IDTema)
 	}
 	if p.NombreTema == "" {
-		return fmt.Errorf("El nombre del tema no puede estar vacío")
+		return fmt.Errorf("el nombre del tema no puede estar vacío")
 	}
 
 	return nil
