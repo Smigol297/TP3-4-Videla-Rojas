@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuarioList = document.getElementById('usuario-list');
 
     // Selectores de Tarjetas
-    /*const tarjetaForm = document.getElementById('tarjeta-form');
+    const tarjetaForm = document.getElementById('tarjeta-form');
     const tarjetaPreguntaInput = document.getElementById('tarjeta-pregunta');
     const tarjetaRespuestaInput = document.getElementById('tarjeta-respuesta');
     const tarjetaOpcionAInput = document.getElementById('tarjeta-opcion-a');
     const tarjetaOpcionBInput = document.getElementById('tarjeta-opcion-b');
     const tarjetaOpcionCInput = document.getElementById('tarjeta-opcion-c');
     const tarjetaIdTemaInput = document.getElementById('tarjeta-id-tema');
-    const tarjetaList = document.getElementById('tarjeta-list');*/
+    const tarjetaList = document.getElementById('tarjeta-list');
 
 
     // --- 3. SECCIÓN: TEMAS ---
@@ -193,15 +193,104 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    // --- 5. SECCIÓN: TARJETAS ---
+
+    // --- 5. SECCIÓN: TARJETAS ---
+
+    // GET /tarjetas
+    async function fetchTarjetas() {
+        try {
+            const response = await fetch(TARJETA_API);
+            if (!response.ok) throw new Error('Error al cargar tarjetas');
+            const tarjetas = await response.json();
+            
+            tarjetaList.innerHTML = ''; // Limpiar lista
+            if (tarjetas && tarjetas.length > 0) {
+                tarjetas.forEach(tarjeta => {
+                    const li = document.createElement('li');
+                    li.textContent = `(ID: ${tarjeta.id_tarjeta}) [Tema ID: ${tarjeta.id_tema}] - ${tarjeta.pregunta} `;
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Eliminar';
+                    deleteButton.onclick = () => deleteTarjeta(tarjeta.id_tarjeta);
+                    
+                    li.appendChild(deleteButton);
+                    tarjetaList.appendChild(li);
+                });
+            } else {
+                tarjetaList.innerHTML = '<li>No hay tarjetas creadas.</li>';
+            }
+        } catch (error) {
+            console.error('Error en fetchTarjetas:', error);
+            tarjetaList.innerHTML = '<li>Error al cargar la lista.</li>';
+        }
+    }
+
+    // POST /tarjetas
+    async function handleTarjetaSubmit(event) {
+        event.preventDefault();
+        
+        const idTema = parseInt(tarjetaIdTemaInput.value, 10);
+        if (isNaN(idTema) || idTema <= 0) {
+            alert('El ID de Tema debe ser un número válido y positivo.');
+            return;
+        }
+
+        const data = {
+            pregunta: tarjetaPreguntaInput.value.trim(),
+            respuesta: tarjetaRespuestaInput.value.trim(),
+            opcion_a: tarjetaOpcionAInput.value.trim(),
+            opcion_b: tarjetaOpcionBInput.value.trim(),
+            opcion_c: tarjetaOpcionCInput.value.trim(),
+            id_tema: idTema // Usamos el ID de tema parseado
+        };
+
+        if (!data.pregunta || !data.respuesta || !data.opcion_a || !data.opcion_b || !data.opcion_c) {
+            alert('Todos los campos de tarjeta son obligatorios');
+            return;
+        }
+
+        try {
+            const response = await fetch(TARJETA_API, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) throw new Error(await response.text());
+            
+            tarjetaForm.reset();
+            await fetchTarjetas(); // Refrescar lista
+        } catch (error) {
+            console.error('Error al crear tarjeta:', error);
+            alert(`Error al crear tarjeta: ${error.message}`);
+        }
+    }
+
+    // DELETE /tarjetas/{id}
+    async function deleteTarjeta(id) {
+        if (!confirm(`¿Eliminar tarjeta con ID ${id}?`)) return;
+        try {
+            const response = await fetch(`${TARJETA_API}/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error(await response.text());
+            await fetchTarjetas(); // Refrescar lista
+        } catch (error) {
+            console.error('Error al eliminar tarjeta:', error);
+            alert(`Error al eliminar tarjeta: ${error.message}`);
+        }
+    }
+
+
+
+
     // --- 6. INICIALIZACIÓN ---
 
     // Añadir listeners a los formularios
     temaForm.addEventListener('submit', handleTemaSubmit);
     usuarioForm.addEventListener('submit', handleUsuarioSubmit);
-    //tarjetaForm.addEventListener('submit', handleTarjetaSubmit);
+    tarjetaForm.addEventListener('submit', handleTarjetaSubmit);
     
     // Cargar los datos iniciales de todas las entidades
     fetchTemas();
     fetchUsuarios();
-    //fetchTarjetas();
+    fetchTarjetas();
 });
