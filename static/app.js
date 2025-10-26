@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const temaList = document.getElementById('tema-list');
 
     // Selectores de Usuarios
-    /*const usuarioForm = document.getElementById('usuario-form');
+    const usuarioForm = document.getElementById('usuario-form');
     const usuarioNombreInput = document.getElementById('usuario-nombre');
     const usuarioEmailInput = document.getElementById('usuario-email');
     const usuarioContrasenaInput = document.getElementById('usuario-contrasena');
-    const usuarioList = document.getElementById('usuario-list');*/
+    const usuarioList = document.getElementById('usuario-list');
 
     // Selectores de Tarjetas
     /*const tarjetaForm = document.getElementById('tarjeta-form');
@@ -116,17 +116,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- 4. SECCIÓN: USUARIOS ---
+
+    // GET /users
+    async function fetchUsuarios() {
+        try {
+            const response = await fetch(USUARIO_API);
+            if (!response.ok) throw new Error('Error al cargar usuarios');
+            const usuarios = await response.json();
+
+            usuarioList.innerHTML = ''; // Limpiar lista
+            if (usuarios && usuarios.length > 0) {
+                usuarios.forEach(user => {
+                    const li = document.createElement('li');
+                    // Mostramos solo datos no sensibles
+                    li.textContent = `(ID: ${user.id_usuario}) - ${user.nombre_usuario} (${user.email}) `;
+        
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Eliminar';
+                    deleteButton.onclick = () => deleteUsuario(user.id_usuario);
+                
+                    li.appendChild(deleteButton);
+                    usuarioList.appendChild(li);
+                });
+            } else {
+                usuarioList.innerHTML = '<li>No hay usuarios creados.</li>';
+            }
+        } catch (error) {
+            console.error('Error en fetchUsuarios:', error);
+            usuarioList.innerHTML = '<li>Error al cargar la lista.</li>';
+        }
+    }
+
+    // POST /users
+    async function handleUsuarioSubmit(event) {
+        event.preventDefault();
+        const data = {
+            nombre_usuario: usuarioNombreInput.value.trim(),
+            email: usuarioEmailInput.value.trim(),
+            contrasena: usuarioContrasenaInput.value.trim()
+        };
+
+        if (!data.nombre_usuario || !data.email || !data.contrasena) {
+            alert('Todos los campos de usuario son obligatorios');
+        return;
+        }
+
+        try {
+            const response = await fetch(USUARIO_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+            });
+        
+            if (!response.ok) throw new Error(await response.text());
+
+            usuarioForm.reset();
+            await fetchUsuarios(); // Refrescar lista
+        } catch (error) {
+            console.error('Error al crear usuario:', error);
+            alert(`Error al crear usuario: ${error.message}`);
+        }
+    }
+
+    // DELETE /users/{id}
+    async function deleteUsuario(id) {
+        if (!confirm(`¿Eliminar usuario con ID ${id}?`)) return;
+        try {
+            const response = await fetch(`${USUARIO_API}/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error(await response.text());
+            await fetchUsuarios(); // Refrescar lista
+        } catch (error) {
+            console.error('Error al eliminar usuario:', error);
+            alert(`Error al eliminar usuario: ${error.message}`);
+        }
+    }
 
 
     // --- 6. INICIALIZACIÓN ---
 
     // Añadir listeners a los formularios
     temaForm.addEventListener('submit', handleTemaSubmit);
-    //usuarioForm.addEventListener('submit', handleUsuarioSubmit);
+    usuarioForm.addEventListener('submit', handleUsuarioSubmit);
     //tarjetaForm.addEventListener('submit', handleTarjetaSubmit);
     
     // Cargar los datos iniciales de todas las entidades
     fetchTemas();
-    //fetchUsuarios();
+    fetchUsuarios();
     //fetchTarjetas();
 });
