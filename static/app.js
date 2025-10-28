@@ -212,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const deleteButton = document.createElement('button');
                     deleteButton.textContent = 'Eliminar';
+                    //Se añade un listener directamente aL botón utilizando la propiedad onclick
                     deleteButton.onclick = () => deleteTarjeta(tarjeta.id_tarjeta);
                     
                     li.appendChild(deleteButton);
