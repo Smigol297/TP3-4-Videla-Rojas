@@ -203,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(TARJETA_API);
             if (!response.ok) throw new Error('Error al cargar tarjetas');
             const tarjetas = await response.json();
-            
             tarjetaList.innerHTML = ''; // Limpiar lista
             if (tarjetas && tarjetas.length > 0) {
                 tarjetas.forEach(tarjeta => {
@@ -221,6 +220,30 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 tarjetaList.innerHTML = '<li>No hay tarjetas creadas.</li>';
             }
+            /**
+            * Carga el dropdown de temas en el formulario de tarjetas
+            * Crea una opción por defecto "Selecciona un tema" deshabilitada
+            */
+            tarjetaIdTemaInput.innerHTML = ''; // Limpiar opciones de temas
+            // Agregar opción por defecto deshabilitada para seleccionar
+            const emptyOption = document.createElement('option'); 
+            emptyOption.value = ''; 
+            emptyOption.textContent = 'Selecciona un tema'; 
+            emptyOption.disabled = true; 
+            emptyOption.selected = true; 
+            tarjetaIdTemaInput.appendChild(emptyOption); 
+
+            const temasResponse = await fetch(TEMA_API); 
+            if (temasResponse.ok) {
+                const temas = await temasResponse.json();
+                temas.forEach(tema => {
+                    const option = document.createElement('option');
+                    option.value = tema.id_tema;  // Valor que se envía al backend
+                    option.textContent = tema.nombre_tema;  // Texto que ve el usuario
+                    tarjetaIdTemaInput.appendChild(option);
+                });
+            }// Hasta aquí carga el dropdown
+            
         } catch (error) {
             console.error('Error en fetchTarjetas:', error);
             tarjetaList.innerHTML = '<li>Error al cargar la lista.</li>';
