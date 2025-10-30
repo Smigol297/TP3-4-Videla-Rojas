@@ -28,7 +28,7 @@ createUsuario:
 	-H "Content-Type: application/json" \
 	-d '{"nombre_usuario":"$(nombre)","email":"$(email)","contrasena":"$(contrasena)"}'
 getUserByID:
-	@curl -X GET http://localhost:8080/users/$(id) | jq
+	@curl -X GET http://localhost:8080/users/$(id)
 putUserByID:
 	@curl -X PUT http://localhost:8080/users/$(id) \
 	-H "Content-Type: application/json" \
@@ -49,8 +49,20 @@ testUsers:
 	  -H "Content-Type: application/json" \
 	  -d '{"nombre_usuario":"Maria Lopez","email":"maria@example.com","contrasena":"securepassword"}' | jq -r '.id_usuario'); \
 	echo "Usuario 2 ID: $$ID2"; \
+	echo "=== Crear usuario mal un usuario ==="; \
+	curl -s -X POST http://localhost:8080/users \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_usuario":"","email":"invalido","contrasena":""}' ; \
+	curl -s -X POST http://localhost:8080/users \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_usuario":"no vacio","email":"invalido","contrasena":""}' ; \
+	curl -s -X POST http://localhost:8080/users \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_usuario":"no vacio","email":"email@valido.com","contrasena":""}' ; \
 	echo "=== Listar usuarios después de crear ==="; \
 	curl -s http://localhost:8080/users | jq; \
+	echo "=== Obtener usuario 0 ==="; \
+	curl -s http://localhost:8080/users/0 ; \
 	echo "=== Obtener usuario 1 ==="; \
 	curl -s http://localhost:8080/users/$$ID1 | jq; \
 	echo "=== Actualizar usuario 1 ==="; \
@@ -76,7 +88,7 @@ createTarjeta:
 	-H "Content-Type: application/json" \
 	-d '{"pregunta":"$(pregunta)","respuesta":"$(respuesta)","opcion_a":"$(opcion_a)","opcion_b":"$(opcion_b)","opcion_c":"$(opcion_c)","id_tema":$(id_tema)}'
 getTarjetaByID:
-	@curl -X GET http://localhost:8080/tarjetas/$(id) | jq
+	@curl -X GET http://localhost:8080/tarjetas/$(id)
 putTarjetaByID:
 	@curl -X PUT http://localhost:8080/tarjetas/$(id) \
 	-H "Content-Type: application/json" \
@@ -87,34 +99,70 @@ deleteTarjetaByID:
 testTarjetas:
 	@echo "=== Listar tarjetas inicial ==="
 	@curl -s http://localhost:8080/tarjetas | jq
-	@echo "=== Crear tarjeta 1 ==="
-	@ID1=$$(curl -s -X POST http://localhost:8080/tarjetas \
+	@echo "=== Crear tema para tarjetas ==="
+	@ID_TEMA=$$(curl -s -X POST http://localhost:8080/temas \
 	  -H "Content-Type: application/json" \
-	  -d '{"pregunta":"¿Capital de Francia?","respuesta":"París","opcion_a":"Londres","opcion_b":"Berlín","opcion_c":"Madrid","id_tema":1}' | jq -r '.id_tarjeta'); \
+	  -d '{"nombre_tema":"Geografía"}' | jq -r '.id_tema'); \
+	echo "ID Tema para tarjetas: $$ID_TEMA "; \
+	ID_TEMA2=$$(curl -s -X POST http://localhost:8080/temas \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_tema":"Ciencia"}' | jq -r '.id_tema'); \
+	echo "ID Tema 2 para tarjetas: $$ID_TEMA2"; \
+	echo "=== Crear tarjeta 1 ==="; \
+	ID1=$$(curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"¿Capital de Francia?\",\"respuesta\":\"París\",\"opcion_a\":\"París\",\"opcion_b\":\"Berlín\",\"opcion_c\":\"Madrid\",\"id_tema\":$$ID_TEMA}" | jq -r '.id_tarjeta'); \
 	echo "Tarjeta 1 ID: $$ID1"; \
 	echo "=== Crear tarjeta 2 ==="; \
 	ID2=$$(curl -s -X POST http://localhost:8080/tarjetas \
 	  -H "Content-Type: application/json" \
-	  -d '{"pregunta":"¿Capital de España?","respuesta":"Madrid","opcion_a":"Barcelona","opcion_b":"Valencia","opcion_c":"Sevilla","id_tema":1}' | jq -r '.id_tarjeta'); \
+	  -d "{\"pregunta\":\"¿Capital de España?\",\"respuesta\":\"Madrid\",\"opcion_a\":\"Barcelona\",\"opcion_b\":\"Valencia\",\"opcion_c\":\"Madrid\",\"id_tema\":$$ID_TEMA}" | jq -r '.id_tarjeta'); \
+	echo "Tarjeta 2 ID: $$ID2"; \
+	echo "=== Crear tarjeta 3 ==="; \
 	ID3=$$(curl -s -X POST http://localhost:8080/tarjetas \
       -H "Content-Type: application/json" \
-      -d '{"pregunta":"¿Cuál es el río más largo del mundo?","respuesta":"Nilo","opcion_a":"Amazonas","opcion_b":"Yangtsé","opcion_c":"Misisipi","id_tema":3}' | jq -r '.id_tarjeta'); \
+      -d "{\"pregunta\":\"¿Cuál es el río más largo del mundo?\",\"respuesta\":\"Nilo\",\"opcion_a\":\"Amazonas\",\"opcion_b\":\"Nilo\",\"opcion_c\":\"Misisipi\",\"id_tema\":$$ID_TEMA2}" | jq -r '.id_tarjeta'); \
+	echo "Tarjeta 3 ID: $$ID3"; \
+	echo "=== Crear tarjeta 4 ==="; \
 	ID4=$$(curl -s -X POST http://localhost:8080/tarjetas \
       -H "Content-Type: application/json" \
-      -d '{"pregunta":"¿Qué planeta es conocido como el planeta rojo?","respuesta":"Marte","opcion_a":"Júpiter","opcion_b":"Venus","opcion_c":"Saturno","id_tema":3}' | jq -r '.id_tarjeta'); \
+      -d "{\"pregunta\":\"¿Qué planeta es conocido como el planeta rojo?\",\"respuesta\":\"Marte\",\"opcion_a\":\"Júpiter\",\"opcion_b\":\"Venus\",\"opcion_c\":\"Marte\",\"id_tema\":$$ID_TEMA2}" | jq -r '.id_tarjeta'); \
+	echo "Tarjeta 4 ID: $$ID4"; \
+	echo "=== Crear mal una tarjeta ==="; \
+	curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"\",\"respuesta\":\"\",\"opcion_a\":\"\",\"opcion_b\":\"\",\"opcion_c\":\"\",\"id_tema\":$$ID_TEMA}"; \
+	curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"No vacía\",\"respuesta\":\"\",\"opcion_a\":\"\",\"opcion_b\":\"\",\"opcion_c\":\"\",\"id_tema\":$$ID_TEMA}"; \
+	curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"No vacía\",\"respuesta\":\"No vacía\",\"opcion_a\":\"\",\"opcion_b\":\"\",\"opcion_c\":\"\",\"id_tema\":$$ID_TEMA}"; \
+	curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"No vacía\",\"respuesta\":\"No vacía\",\"opcion_a\":\"No vacía\",\"opcion_b\":\"\",\"opcion_c\":\"\",\"id_tema\":$$ID_TEMA}"; \
+	curl -s -X POST http://localhost:8080/tarjetas \
+	  -H "Content-Type: application/json" \
+	  -d "{\"pregunta\":\"No vacía\",\"respuesta\":\"No vacía\",\"opcion_a\":\"No vacía\",\"opcion_b\":\"No vacía\",\"opcion_c\":\"No vacía\",\"id_tema\":0}"; \
+	echo "=== IDs de tarjetas creadas ==="; \
+	echo "Tarjeta 1 ID: $$ID1"; \
 	echo "Tarjeta 2 ID: $$ID2"; \
 	echo "Tarjeta 3 ID: $$ID3"; \
 	echo "Tarjeta 4 ID: $$ID4"; \
 	echo "=== Listar tarjetas después de crear ==="; \
 	curl -s http://localhost:8080/tarjetas | jq; \
-	echo "=== Listar tarjetas por tema (id_tema=1) ==="; \
-	curl -s http://localhost:8080/tarjetas?tema=3 | jq; \
+	echo "=== Listar tarjetas por tema 0 de manera aleatoria ==="; \
+	curl -s "http://localhost:8080/tarjetas?tema=0" | jq; \
+	echo "=== Listar tarjetas por tema (id_tema=$$ID_TEMA) de manera aleatoria ==="; \
+	curl -s "http://localhost:8080/tarjetas?tema=$$ID_TEMA" | jq; \
+	echo "=== Obtener tarjeta 0 ==="; \
+	curl -s http://localhost:8080/tarjetas/0 ; \
 	echo "=== Obtener tarjeta 1 ==="; \
 	curl -s http://localhost:8080/tarjetas/$$ID1 | jq; \
 	echo "=== Actualizar tarjeta 1 ==="; \
 	curl -s -X PUT http://localhost:8080/tarjetas/$$ID1 \
 	  -H "Content-Type: application/json" \
-	  -d '{"pregunta":"¿Capital de Francia actualizada?","respuesta":"París","opcion_a":"Londres","opcion_b":"Berlín","opcion_c":"Madrid","id_tema":1}' | jq; \
+	  -d "{\"pregunta\":\"¿Capital de Francia actualizada?\",\"respuesta\":\"París\",\"opcion_a\":\"París\",\"opcion_b\":\"Berlín\",\"opcion_c\":\"Madrid\",\"id_tema\":$$ID_TEMA}" | jq; \
 	echo "=== Listar tarjetas después de actualizar ==="; \
 	curl -s http://localhost:8080/tarjetas | jq; \
 	echo "=== Eliminar tarjeta 1 ==="; \
@@ -125,6 +173,9 @@ testTarjetas:
 	curl -s -X DELETE http://localhost:8080/tarjetas/$$ID3; \
 	echo "=== Eliminar tarjeta 4 ==="; \
 	curl -s -X DELETE http://localhost:8080/tarjetas/$$ID4; \
+	echo "=== Eliminar temas creados ==="; \
+	curl -s -X DELETE http://localhost:8080/temas/$$ID_TEMA; \
+	curl -s -X DELETE http://localhost:8080/temas/$$ID_TEMA2; \
 	echo "=== Listar tarjetas final ==="; \
 	curl -s http://localhost:8080/tarjetas | jq;
 
@@ -135,7 +186,7 @@ createTema:
 	@curl -X POST http://localhost:8080/temas \
 	-d '{"nombre_tema":"$(nombre)"}'
 getTemaByID:
-	@curl -X GET http://localhost:8080/temas/$(id) | jq
+	@curl -X GET http://localhost:8080/temas/$(id)
 putTemaByID:
 	@curl -X PUT http://localhost:8080/temas/$(id) \
 	-H "Content-Type: application/json" \
@@ -155,8 +206,14 @@ testTemas:
 	  -H "Content-Type: application/json" \
 	  -d '{"nombre_tema":"Ciencia"}' | jq -r '.id_tema'); \
 	echo "Tema 2 ID: $$ID2"; \
+	echo "=== Crear mal un tema ==="; \
+	curl -s -X POST http://localhost:8080/temas \
+	  -H "Content-Type: application/json" \
+	  -d '{"nombre_tema":""}' ; \
 	echo "=== Listar temas después de crear ==="; \
 	curl -s http://localhost:8080/temas | jq; \
+	echo "=== Obtener tema 0 ==="; \
+	curl -s http://localhost:8080/temas/0 ; \
 	echo "=== Obtener tema 1 ==="; \
 	curl -s http://localhost:8080/temas/$$ID1 | jq; \
 	echo "=== Actualizar tema 1 ==="; \

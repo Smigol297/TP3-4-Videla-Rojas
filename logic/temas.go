@@ -116,6 +116,9 @@ func TemasByIDHandler(w http.ResponseWriter, r *http.Request) {
 func getTemaByID(w http.ResponseWriter, r *http.Request, id int, queries *sqlc.Queries) {
 	ctx := context.Background()
 	tema, err := queries.GetTemaById(ctx, int32(id))
+	fmt.Println(id)
+	fmt.Println(tema)
+	fmt.Println(err)
 	if err != nil {
 		http.Error(w, "Tema no encontrado", http.StatusNotFound)
 		return

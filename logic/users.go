@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/mail"
 	sqlc "tp3/db"
 
 	_ "github.com/lib/pq"
@@ -16,8 +17,10 @@ func ValidateCreateUser(p sqlc.CreateUsuarioParams) error {
 	if p.NombreUsuario == "" {
 		return fmt.Errorf("el nombre del usuario no puede estar vacío")
 	}
-	if p.Email == "" {
-		return fmt.Errorf("el email del usuario no puede estar vacío")
+	_, err := mail.ParseAddress(p.Email)
+	fmt.Println(err)
+	if err != nil {
+		return fmt.Errorf("el email del usuario no es válido")
 	}
 	if p.Contrasena == "" {
 		return fmt.Errorf("la contraseña del usuario no puede estar vacía")
@@ -31,8 +34,10 @@ func ValidateUpdateUser(p sqlc.UpdateUsuarioParams) error {
 	if p.NombreUsuario == "" {
 		return fmt.Errorf("el nombre del usuario no puede estar vacío")
 	}
-	if p.Email == "" {
-		return fmt.Errorf("el email del usuario no puede estar vacío")
+	_, err := mail.ParseAddress(p.Email)
+	fmt.Println(err)
+	if err != nil {
+		return fmt.Errorf("el email del usuario no es válido")
 	}
 	if p.Contrasena == "" {
 		return fmt.Errorf("la contraseña del usuario no puede estar vacía")
