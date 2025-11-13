@@ -3,51 +3,51 @@ package main
 import (
 	"log"
 	"net/http"
+	handlers "tp3/Handlers" // ¡TU NUEVO PAQUETE DE HANDLERS!
+	sqlc "tp3/db"           // Tu paquete sqlc
+	"tp3/logic"             // Tu paquete de lógica
 
-	"github.com/a-h/templ"
-
-	// IMPORTANTE:
-	// 1. Importa tus tipos de sqlc (para que coincidan)
-	sqlc "tp3/db"
-	// 2. Importa tus vistas generadas por templ
-	views "tp3/Views"
+	_ "github.com/lib/pq"
 )
 
+// main.go AHORA SÓLO HACE DOS COSAS:
+// 1. Configurar las dependencias (BBDD)
+// 2. Registrar las rutas (le dice qué handler va con qué ruta)
+
 func main() {
-	// --- 1. CREA TUS DATOS FALSOS ---
-	// Simplemente creamos slices de las structs que sqlc generó.
+	// 1. Configurar Dependencias
+	dbConn := logic.ConnectDB()
+	if dbConn == nil {
+		log.Fatal("No se pudo conectar a la BBDD")
+	}
+	defer dbConn.Close()
 
-	fakeTemas := []sqlc.Tema{
-		{IDTema: 1, NombreTema: "mate"},
-		{IDTema: 2, NombreTema: "ing"},
-		{IDTema: 3, NombreTema: "leng"},
+	// Creamos la instancia de sqlc.Queries
+	queries := sqlc.New(dbConn)
+
+	// Creamos la instancia de Application (que ahora vive en el paquete 'handlers')
+	// y le "inyectamos" las dependencias (la BBDD y las queries)
+	app := &handlers.Application{
+		DB:      dbConn,
+		Queries: queries,
 	}
 
-	fakeUsuarios := []sqlc.Usuario{
-		{IDUsuario: 1, NombreUsuario: "Usuario de Prueba", Email: "fake@test.com"},
-		{IDUsuario: 2, NombreUsuario: "Otro Usuario", Email: "otro@test.com"},
+	// 2. Registrar Rutas
+	//    ¡Observa qué limpio! 'main' solo define las rutas.
+	//    Toda la lógica está dentro de 'app'.
+	http.HandleFunc("/", app.HandleGetIndex)
+
+	http.HandleFunc("/temas", app.HandleCreateTema)
+	http.HandleFunc("/users", app.HandleCreateUsuario)
+	http.HandleFunc("/tarjetas", app.HandleCreateTarjeta)
+
+	http.HandleFunc("/temas/delete", app.HandleDeleteTema)
+	http.HandleFunc("/users/delete", app.HandleDeleteUsuario)
+	http.HandleFunc("/tarjetas/delete", app.HandleDeleteTarjeta)
+
+	// 3. Iniciar el servidor (El antiguo 'InitServer')
+	log.Println("Iniciando servidor en http://localhost:8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatalf("Error al iniciar servidor: %v", err)
 	}
-
-	fakeTarjetas := []sqlc.Tarjetum{
-		{IDTarjeta: 1, IDTema: 1, Pregunta: "¿Funciona?"},
-		{IDTarjeta: 2, IDTema: 2, Pregunta: "¿entiendo?"},
-	}
-
-	// --- 2. CREA UN HANDLER BÁSICO ---
-	// Este handler no va a la BBDD, solo usa los datos falsos.
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-		// Llama a tu componente IndexPage exactamente como lo haría tu
-		// handler real, pero pasándole los datos falsos.
-		componente := views.IndexPage(fakeTemas, fakeUsuarios, fakeTarjetas)
-
-		// Renderiza el componente
-		templ.Handler(componente).ServeHTTP(w, r)
-	})
-
-	// --- 3. INICIA EL SERVIDOR DE PRUEBAS ---
-	// Lo iniciamos en un puerto DIFERENTE (ej: 8081) para
-	// que no choque con tu servidor real (que está en 8080).
-	log.Println("Servidor de PRUEBAS DE UI iniciado en http://localhost:8081")
-	log.Fatal(http.ListenAndServe(":8081", nil))
 }
