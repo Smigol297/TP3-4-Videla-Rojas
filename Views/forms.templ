@@ -42,6 +42,8 @@ templ UsuarioForm() {
 // Renderiza el formulario para crear una nueva Tarjeta.
 // Apunta a POST /tarjetas
 // Recibe los temas para poder renderizar un <select>
+//Para crear una Tarjeta, además de escribir la pregunta y las respuestas,
+// necesitas seleccionar un Tema existente al que esa tarjeta pertenecerá, por eso le paso sqlc.Tema.
 templ TarjetaForm(temas []sqlc.Tema) {
 	<form action="/tarjetas" method="post">
 		<fieldset>

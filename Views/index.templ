@@ -26,7 +26,7 @@ templ IndexPage(temas []sqlc.Tema, usuarios []sqlc.Usuario, tarjetas []sqlc.Tarj
 			<!-- Columna 3: Tarjetas -->
 			<article>
 				<header><h2>Gestión de Tarjetas</h2></header>
-				@TarjetaForm(temas)
+				@TarjetaForm(temas) //razon de por que le pasamos sqlc.temas 
 				@TarjetaList(tarjetas)
 			</article>
 		</div>
