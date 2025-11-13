@@ -5,11 +5,15 @@ package views
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import templruntime "github.com/a-h/templ/runtime"
+import (
+	"github.com/a-h/templ"
+	templruntime "github.com/a-h/templ/runtime"
 
-import "tp3/db"
-import "fmt" // Usamos fmt en lugar de strconv
+	"fmt"
+	sqlc "tp3/db"
+)
+
+// Usamos fmt en lugar de strconv
 
 func TemaList(temas []sqlc.Tema) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -192,7 +196,7 @@ func UsuarioList(usuarios []sqlc.Usuario) templ.Component {
 	})
 }
 
-func TarjetaList(tarjetas []sqlc.Tarjeta) templ.Component {
+func TarjetaList(tarjetas []sqlc.Tarjetum) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
