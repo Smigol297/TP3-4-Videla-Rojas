@@ -2,12 +2,10 @@ package logic
 
 import (
 	"fmt"
-	sqlc "tp3/db" // Importa tus tipos generados por sqlc
+	sqlc "tp3/db"
 )
 
-// --- CÓDIGO "LIMPIO" ---
 // Solo validación.
-
 func ValidateCreateTarjeta(p sqlc.CreateTarjetaParams) error {
 	if p.Pregunta == "" {
 		return fmt.Errorf("la pregunta no puede estar vacía")

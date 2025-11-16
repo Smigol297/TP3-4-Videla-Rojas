@@ -2,11 +2,8 @@ package logic
 
 import (
 	"fmt"
-	sqlc "tp3/db" // Importa tus tipos generados por sqlc
+	sqlc "tp3/db"
 )
-
-// --- CÓDIGO "LIMPIO" ---
-// Solo validación.
 
 func ValidateCreateUser(p sqlc.CreateUsuarioParams) error {
 	if p.NombreUsuario == "" {

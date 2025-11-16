@@ -2,11 +2,8 @@ package logic
 
 import (
 	"fmt"
-	sqlc "tp3/db" // Importa tus tipos generados por sqlc
+	sqlc "tp3/db"
 )
-
-// --- ESTE ES EL CÓDIGO "LIMPIO" ---
-// No hay http.ResponseWriter. Solo lógica de validación pura.
 
 func ValidateCreateTema(nombre string) error {
 	if nombre == "" {

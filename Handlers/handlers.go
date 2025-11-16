@@ -1,29 +1,24 @@
 package handlers
 
-// Este paquete contiene TODA la lógica de HTTP (los handlers)
-
 import (
 	"context"
 	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
-	views "tp3/Views" // Tu paquete de vistas
-	sqlc "tp3/db"     // Tu paquete sqlc
-	"tp3/logic"       // Tu paquete de lógica
+	views "tp3/Views"
+	sqlc "tp3/db"
+	"tp3/logic"
 
 	"github.com/a-h/templ"
 )
 
-// Application (con 'A' mayúscula) es ahora pública.
-// Contiene las dependencias que nuestros handlers necesitan.
+// Inyección de Dependencias
 type Application struct {
-	DB      *sql.DB
+	DB      *sql.DB //conector a la BD
 	Queries *sqlc.Queries
 }
 
-// HandleGetIndex (con 'H' mayúscula) es ahora pública.
-// Esta es la misma función que estaba en main.go, solo la movimos.
 func (app *Application) HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		if r.Method == http.MethodPost {
@@ -53,8 +48,6 @@ func (app *Application) HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 // --- Handlers de Creación (POST) ---
-// (También movidos aquí y renombrados con 'H' Mayúscula)
-
 func (app *Application) HandleCreateTema(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
@@ -134,8 +127,6 @@ func (app *Application) HandleCreateTarjeta(w http.ResponseWriter, r *http.Reque
 }
 
 // --- Handlers de Eliminación (POST) ---
-// (También movidos aquí y renombrados con 'H' Mayúscula)
-
 func (app *Application) HandleDeleteTema(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
