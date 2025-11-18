@@ -1,42 +1,47 @@
 package views
 
-import "tp3/db"
-import "fmt" 
-import "strconv"
+import sqlc "tp3/db"
+import "fmt"
 
 // Renderiza el formulario para crear un nuevo Tema.
 // Apunta a POST /temas
 templ TemaForm() {
-	<form action="/temas" method="post">
-        //fieldset agrupa controles de un formulario para darles semántica y estructura visual.
-		<fieldset>
-			<legend>Crear Nuevo Tema</legend>
-			<label for="nombre_tema">Nombre del Tema</label>
-			<input type="text" id="nombre_tema" name="nombre_tema" required/>
-			<button type="submit">Guardar Tema</button>
-		</fieldset>
-	</form>
+    // El action y method se reemplazan por los atributos hx-*
+    <form 
+        hx-post="/temas"
+        hx-target="#lista-temas"
+        hx-swap="outerHTML"
+    >
+        <fieldset>
+            <legend>Crear Nuevo Tema</legend>
+            <label for="nombre_tema">Nombre del Tema</label>
+            <input type="text" id="nombre_tema" name="nombre_tema" required/>
+            <button type="submit">Guardar Tema</button>
+        </fieldset>
+    </form>
 }
-
 // Renderiza el formulario para crear un nuevo Usuario.
-// Apunta a POST /users
 templ UsuarioForm() {
-	<form action="/users" method="post">
-		<fieldset>
-			<legend>Crear Nuevo Usuario</legend>
-			
-			<label for="nombre_usuario">Nombre de Usuario</label>
-			<input type="text" id="nombre_usuario" name="nombre_usuario" required/>
-			
-			<label for="email">Email</label>
-			<input type="email" id="email" name="email" required/>
-			
-			<label for="contrasena">Contraseña</label>
-			<input type="password" id="contrasena" name="contrasena" required/>
-			
-			<button type="submit">Guardar Usuario</button>
-		</fieldset>
-	</form>
+    <form 
+        hx-post="/users"
+        hx-target="#lista-usuarios"
+        hx-swap="outerHTML"
+    >
+        <fieldset>
+            <legend>Crear Nuevo Usuario</legend>
+           
+            <label for="nombre_usuario">Nombre de Usuario</label>
+            <input type="text" id="nombre_usuario" name="nombre_usuario" required/>
+           
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required/>
+           
+            <label for="contrasena">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" required/>
+           
+            <button type="submit">Guardar Usuario</button>
+        </fieldset>
+    </form>
 }
 
 // Renderiza el formulario para crear una nueva Tarjeta.
@@ -45,34 +50,38 @@ templ UsuarioForm() {
 //Para crear una Tarjeta, además de escribir la pregunta y las respuestas,
 // necesitas seleccionar un Tema existente al que esa tarjeta pertenecerá, por eso le paso sqlc.Tema.
 templ TarjetaForm(temas []sqlc.Tema) {
-	<form action="/tarjetas" method="post">
-		<fieldset>
-			<legend>Crear Nueva Tarjeta</legend>
-			
-			<label for="pregunta">Pregunta</label>
-			<input type="text" id="pregunta" name="pregunta" required/>
-			
-			<label for="respuesta">Respuesta (Correcta)</label>
-			<input type="text" id="respuesta" name="respuesta" required/>
-			
-			<label for="opcion_a">Opción A</label>
-			<input type="text" id="opcion_a" name="opcion_a" required/>
-			
-			<label for="opcion_b">Opción B</label>
-			<input type="text" id="opcion_b" name="opcion_b" required/>
-			
-			<label for="opcion_c">Opción C</label>
-			<input type="text" id="opcion_c" name="opcion_c" required/>
-			
-			<label for="id_tema">Tema</label>
-			<select id="id_tema" name="id_tema" required>
-				<option value="" disabled selected>Selecciona un tema...</option>
-				for _, tema := range temas {
-					<option value={ fmt.Sprint(tema.IDTema) }>{ tema.NombreTema }</option>
-				}
-			</select>
-			
-			<button type="submit">Guardar Tarjeta</button>
-		</fieldset>
-	</form>
+    <form 
+        hx-post="/tarjetas"
+        hx-target="#lista-tarjetas"
+        hx-swap="outerHTML"
+    >
+        <fieldset>
+            <legend>Crear Nueva Tarjeta</legend>
+           
+            <label for="pregunta">Pregunta</label>
+            <input type="text" id="pregunta" name="pregunta" required/>
+           
+            <label for="respuesta">Respuesta (Correcta)</label>
+            <input type="text" id="respuesta" name="respuesta" required/>
+           
+            <label for="opcion_a">Opción A</label>
+            <input type="text" id="opcion_a" name="opcion_a" required/>
+           
+            <label for="opcion_b">Opción B</label>
+            <input type="text" id="opcion_b" name="opcion_b" required/>
+           
+            <label for="opcion_c">Opción C</label>
+            <input type="text" id="opcion_c" name="opcion_c" required/>
+           
+            <label for="id_tema">Tema</label>
+            <select id="id_tema" name="id_tema" required>
+                <option value="" disabled selected>Selecciona un tema...</option>
+                for _, tema := range temas {
+                    <option value={ fmt.Sprint(tema.IDTema) }>{ tema.NombreTema }</option>
+                }
+            </select>
+           
+            <button type="submit">Guardar Tarjeta</button>
+        </fieldset>
+    </form>
 }

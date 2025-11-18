@@ -29,7 +29,7 @@ func Layout() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><!-- data-theme es el selector de Pico.css --><html lang=\"es\" data-theme=\"light\"><head><meta charset=\"UTF-ARA\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Gestor de Entidades (SSR)</title><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"></head><body><main class=\"container\"><!-- Pico no tiene clases de centrado de texto, usamos un style simple --><h1 style=\"text-align: center;\">Gestor de Entidades (Renderizado en Servidor)</h1><!-- El contenido de la página se inyectará aquí -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<!doctype html><!-- data-theme es el selector de Pico.css --><html lang=\"es\" data-theme=\"light\"><head><meta charset=\"UTF-ARA\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Gestor de Entidades (SSR)</title><script src=\"https://unpkg.com/htmx.org@1.9.10\"></script><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"></head><body><main class=\"container\"><!-- Pico no tiene clases de centrado de texto, usamos un style simple --><h1 style=\"text-align: center;\">Gestor de Entidades (Renderizado en Servidor)</h1><!-- El contenido de la página se inyectará aquí -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

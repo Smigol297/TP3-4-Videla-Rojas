@@ -1,10 +1,8 @@
 package views
 
-import "tp3/db"
-import "fmt"
-import "strconv"
+import sqlc "tp3/db"
 
-templ IndexPage(temas []sqlc.Tema, usuarios []sqlc.Usuario, tarjetas []sqlc.Tarjeta) {
+templ IndexPage(temas []sqlc.Tema, usuarios []sqlc.Usuario, tarjetas []sqlc.Tarjetum) {
 	@Layout() {
 		<div class="grid">
 			<!-- Columna 1: Temas -->

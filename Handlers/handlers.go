@@ -19,6 +19,7 @@ type Application struct {
 	Queries *sqlc.Queries
 }
 
+// Esta función maneja la ruta / (el Home). pagina principal
 func (app *Application) HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		if r.Method == http.MethodPost {
@@ -43,7 +44,9 @@ func (app *Application) HandleGetIndex(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error listando tarjetas: %v", err)
 	}
 
+	//1. Creamos el componente de la página principal,
 	component := views.IndexPage(temas, usuarios, tarjetas)
+	//ivertir ese componente en HTML y enviarlo al navegador.
 	templ.Handler(component).ServeHTTP(w, r)
 }
 
@@ -67,7 +70,19 @@ func (app *Application) HandleCreateTema(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Error al crear tema", http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	//cambio HTMX
+	//http.Redirect(w, r, "/", http.StatusSeeOther)
+	temas, err := app.Queries.ListTemas(context.Background())
+	if err != nil {
+		log.Printf("Error listando temas post-creación: %v", err)
+		http.Error(w, "Error al obtener lista de temas", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. Renderizamos y devolvemos SÓLO el componente de la lista.
+	// HTMX lo recibirá y lo pondrá en el hx-target="#lista-temas".
+	views.TemaList(temas).Render(r.Context(), w)
+	// --- FIN DEL CAMBIO HTMX ---
 }
 
 func (app *Application) HandleCreateUsuario(w http.ResponseWriter, r *http.Request) {
@@ -93,7 +108,20 @@ func (app *Application) HandleCreateUsuario(w http.ResponseWriter, r *http.Reque
 		http.Error(w, "Error al crear usuario", http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	//borro redirect para aplicar HTMX
+	//http.Redirect(w, r, "/", http.StatusSeeOther)
+	usuarios, err := app.Queries.ListUsuarios(context.Background())
+	if err != nil {
+		log.Printf("Error listando temas post-creación: %v", err)
+		http.Error(w, "Error al obtener lista de temas", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. Renderizamos y devolvemos SÓLO el componente de la lista.
+	// HTMX lo recibirá y lo pondrá en el hx-target="#usuarios-temas".
+	views.UsuarioList(usuarios).Render(r.Context(), w)
+	// --- FIN DEL CAMBIO HTMX ---
+
 }
 
 func (app *Application) HandleCreateTarjeta(w http.ResponseWriter, r *http.Request) {

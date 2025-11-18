@@ -5,14 +5,11 @@ package views
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import (
-	"fmt"
+import "github.com/a-h/templ"
+import templruntime "github.com/a-h/templ/runtime"
 
-	"github.com/a-h/templ"
-	templruntime "github.com/a-h/templ/runtime"
-
-	sqlc "tp3/db"
-)
+import sqlc "tp3/db"
+import "fmt"
 
 // Renderiza el formulario para crear un nuevo Tema.
 // Apunta a POST /temas
@@ -37,7 +34,7 @@ func TemaForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form action=\"/temas\" method=\"post\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/temas\" hx-target=\"#lista-temas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -46,7 +43,6 @@ func TemaForm() templ.Component {
 }
 
 // Renderiza el formulario para crear un nuevo Usuario.
-// Apunta a POST /users
 func UsuarioForm() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -68,7 +64,7 @@ func UsuarioForm() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form action=\"/users\" method=\"post\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/users\" hx-target=\"#lista-usuarios\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -79,6 +75,8 @@ func UsuarioForm() templ.Component {
 // Renderiza el formulario para crear una nueva Tarjeta.
 // Apunta a POST /tarjetas
 // Recibe los temas para poder renderizar un <select>
+// Para crear una Tarjeta, además de escribir la pregunta y las respuestas,
+// necesitas seleccionar un Tema existente al que esa tarjeta pertenecerá, por eso le paso sqlc.Tema.
 func TarjetaForm(temas []sqlc.Tema) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -100,7 +98,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form action=\"/tarjetas\" method=\"post\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form hx-post=\"/tarjetas\" hx-target=\"#lista-tarjetas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -112,7 +110,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(tema.IDTema))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 69, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 80, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -125,7 +123,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(tema.NombreTema)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 69, Col: 64}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 80, Col: 79}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {

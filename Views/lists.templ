@@ -1,62 +1,68 @@
 package views
 
-import "tp3/db"
+import sqlc "tp3/db"
 import "fmt" // Usamos fmt en lugar de strconv
 
 templ TemaList(temas []sqlc.Tema) {
-	<h3>Lista de Temas</h3>
-	<ul>
-		if len(temas) == 0 {
-			<li>No hay temas creados.</li>
-		}
-		for _, tema := range temas {
-			<li>
-				<span>(ID: { fmt.Sprint(tema.IDTema) }) - { tema.NombreTema }</span>
-				
-				<form action="/temas/delete" method="post" style="display: inline; margin-left: 10px;">
-					<!-- CAMBIO: de strconv.Itoa a fmt.Sprint -->
-					<input type="hidden" name="id" value={ fmt.Sprint(tema.IDTema) }/>
-					<button type="submit">Eliminar</button>
-				</form>
-			</li>
-		}
-	</ul>
+	<div id="lista-temas">
+		<h3>Lista de Temas</h3>
+		<ul>
+			if len(temas) == 0 {
+				<li>No hay temas creados.</li>
+			}
+			for _, tema := range temas {
+				<li>
+					<span>(ID: { fmt.Sprint(tema.IDTema) }) - { tema.NombreTema }</span>
+					
+					<form action="/temas/delete" method="post" style="display: inline; margin-left: 10px;">
+						<!-- CAMBIO: de strconv.Itoa a fmt.Sprint -->
+						<input type="hidden" name="id" value={ fmt.Sprint(tema.IDTema) }/>
+						<button type="submit">Eliminar</button>
+					</form>
+				</li>
+			}
+		</ul>
+	</div> 
 }
 
 templ UsuarioList(usuarios []sqlc.Usuario) {
-	<h3>Lista de Usuarios</h3>
-	<ul>
-		if len(usuarios) == 0 {
-			<li>No hay usuarios creados.</li>
-		}
-		for _, usuario := range usuarios {
-			<li>
-				<span>(ID: { fmt.Sprint(usuario.IDUsuario) }) - { usuario.NombreUsuario } ({ usuario.Email })</span>
-				
-				<form action="/users/delete" method="post" style="display: inline; margin-left: 10px;">
-					<input type="hidden" name="id" value={ fmt.Sprint(usuario.IDUsuario) }/>
-					<button type="submit">Eliminar</button>
-				</form>
-			</li>
-		}
-	</ul>
+	<div id="lista-usuarios">
+		<h3>Lista de Usuarios</h3>
+		<ul>
+			if len(usuarios) == 0 {
+				<li>No hay usuarios creados.</li>
+			}
+			for _, usuario := range usuarios {
+				<li>
+					<span>(ID: { fmt.Sprint(usuario.IDUsuario) }) - { usuario.NombreUsuario } ({ usuario.Email })</span>
+					
+					<form action="/users/delete" method="post" style="display: inline; margin-left: 10px;">
+						<input type="hidden" name="id" value={ fmt.Sprint(usuario.IDUsuario) }/>
+						<button type="submit">Eliminar</button>
+					</form>
+				</li>
+			}
+		</ul>
+	</div>
 }
 
-templ TarjetaList(tarjetas []sqlc.Tarjeta) {
-	<h3>Lista de Tarjetas</h3>
-	<ul>
-		if len(tarjetas) == 0 {
-			<li>No hay tarjetas creadas.</li>
-		}
-		for _, tarjeta := range tarjetas {
-			<li>
-				<span>(ID: { fmt.Sprint(tarjeta.IDTarjeta) }) [Tema: { fmt.Sprint(tarjeta.IDTema) }] - { tarjeta.Pregunta }</span>
-				
-				<form action="/tarjetas/delete" method="post" style="display: inline; margin-left: 10px;">
-					<input type="hidden" name="id" value={ fmt.Sprint(tarjeta.IDTarjeta) }/>
-					<button type="submit">Eliminar</button>
-				</form>
-			</li>
-		}
-	</ul>
+templ TarjetaList(tarjetas []sqlc.Tarjetum) {
+	<div id="lista-tarjetas">
+		<h3>Lista de Tarjetas</h3>
+		<ul>
+			if len(tarjetas) == 0 {
+				<li>No hay tarjetas creadas.</li>
+			}
+			for _, tarjeta := range tarjetas {
+				<li>
+					<span>(ID: { fmt.Sprint(tarjeta.IDTarjeta) }) [Tema: { fmt.Sprint(tarjeta.IDTema) }] - { tarjeta.Pregunta }</span>
+					
+					<form action="/tarjetas/delete" method="post" style="display: inline; margin-left: 10px;">
+						<input type="hidden" name="id" value={ fmt.Sprint(tarjeta.IDTarjeta) }/>
+						<button type="submit">Eliminar</button>
+					</form>
+				</li>
+			}
+		</ul>
+	</div>
 }
