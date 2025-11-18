@@ -34,7 +34,7 @@ func TemaForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/temas\" hx-target=\"#lista-temas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/temas\" hx-target=\"#lista-temas\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -64,7 +64,7 @@ func UsuarioForm() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/users\" hx-target=\"#lista-usuarios\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/users\" hx-target=\"#lista-usuarios\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,7 +98,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form hx-post=\"/tarjetas\" hx-target=\"#lista-tarjetas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form hx-post=\"/tarjetas\" hx-target=\"#lista-tarjetas\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -110,7 +110,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(tema.IDTema))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 80, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 84, Col: 59}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -123,7 +123,7 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(tema.NombreTema)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 80, Col: 79}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 84, Col: 79}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {

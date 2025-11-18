@@ -11,6 +11,8 @@ templ TemaForm() {
         hx-post="/temas"
         hx-target="#lista-temas"
         hx-swap="outerHTML"
+        hx-on::after-request="this.reset()" 
+
     >
         <fieldset>
             <legend>Crear Nuevo Tema</legend>
@@ -26,6 +28,7 @@ templ UsuarioForm() {
         hx-post="/users"
         hx-target="#lista-usuarios"
         hx-swap="outerHTML"
+        hx-on::after-request="this.reset()" 
     >
         <fieldset>
             <legend>Crear Nuevo Usuario</legend>
@@ -54,6 +57,7 @@ templ TarjetaForm(temas []sqlc.Tema) {
         hx-post="/tarjetas"
         hx-target="#lista-tarjetas"
         hx-swap="outerHTML"
+        hx-on::after-request="this.reset()" 
     >
         <fieldset>
             <legend>Crear Nueva Tarjeta</legend>
