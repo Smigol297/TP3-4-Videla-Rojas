@@ -5,14 +5,17 @@ package views
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import "github.com/a-h/templ"
-import templruntime "github.com/a-h/templ/runtime"
+import (
+	"github.com/a-h/templ"
+	templruntime "github.com/a-h/templ/runtime"
 
-import sqlc "tp3/db"
-import "fmt"
+	"fmt"
+	sqlc "tp3/db"
+)
 
 // Renderiza el formulario para crear un nuevo Tema.
 // Apunta a POST /temas
+// hx-on::after-request="this.reset()" esto lo saquè pero tambien limpiaba el form mas simple.
 func TemaForm() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -34,7 +37,46 @@ func TemaForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form hx-post=\"/temas\" hx-target=\"#lista-temas\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form id=\"form-temas\" hx-post=\"/temas\" hx-target=\"#lista-temas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Tema</legend> <label for=\"nombre_tema\">Nombre del Tema</label> <input type=\"text\" id=\"nombre_tema\" name=\"nombre_tema\" required> <button type=\"submit\">Guardar Tema</button></fieldset></form>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+// 2. Nuevo Componente OOB
+// Este componente renderiza el formulario DE NUEVO, pero con el atributo form-temas
+func TemaFormOOB() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div id=\"form-temas\" hx-swap-oob=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = TemaForm().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -59,12 +101,49 @@ func UsuarioForm() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<form hx-post=\"/users\" hx-target=\"#lista-usuarios\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<form id=\"form-usuarios\" hx-post=\"/users\" hx-target=\"#lista-usuarios\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nuevo Usuario</legend> <label for=\"nombre_usuario\">Nombre de Usuario</label> <input type=\"text\" id=\"nombre_usuario\" name=\"nombre_usuario\" required> <label for=\"email\">Email</label> <input type=\"email\" id=\"email\" name=\"email\" required> <label for=\"contrasena\">Contraseña</label> <input type=\"password\" id=\"contrasena\" name=\"contrasena\" required> <button type=\"submit\">Guardar Usuario</button></fieldset></form>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func UsuarioFormOOB() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div id=\"form-usuarios\" hx-swap-oob=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = UsuarioForm().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -73,7 +152,6 @@ func UsuarioForm() templ.Component {
 }
 
 // Renderiza el formulario para crear una nueva Tarjeta.
-// Apunta a POST /tarjetas
 // Recibe los temas para poder renderizar un <select>
 // Para crear una Tarjeta, además de escribir la pregunta y las respuestas,
 // necesitas seleccionar un Tema existente al que esa tarjeta pertenecerá, por eso le paso sqlc.Tema.
@@ -93,48 +171,85 @@ func TarjetaForm(temas []sqlc.Tema) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<form hx-post=\"/tarjetas\" hx-target=\"#lista-tarjetas\" hx-swap=\"outerHTML\" hx-on::after-request=\"this.reset()\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<form id=\"form-tarjetas\" hx-post=\"/tarjetas\" hx-target=\"#lista-tarjetas\" hx-swap=\"outerHTML\"><fieldset><legend>Crear Nueva Tarjeta</legend> <label for=\"pregunta\">Pregunta</label> <input type=\"text\" id=\"pregunta\" name=\"pregunta\" required> <label for=\"respuesta\">Respuesta (Correcta)</label> <input type=\"text\" id=\"respuesta\" name=\"respuesta\" required> <label for=\"opcion_a\">Opción A</label> <input type=\"text\" id=\"opcion_a\" name=\"opcion_a\" required> <label for=\"opcion_b\">Opción B</label> <input type=\"text\" id=\"opcion_b\" name=\"opcion_b\" required> <label for=\"opcion_c\">Opción C</label> <input type=\"text\" id=\"opcion_c\" name=\"opcion_c\" required> <label for=\"id_tema\">Tema</label> <select id=\"id_tema\" name=\"id_tema\" required><option value=\"\" disabled selected>Selecciona un tema...</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, tema := range temas {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<option value=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<option value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(tema.IDTema))
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(tema.IDTema))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 84, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 100, Col: 59}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(tema.NombreTema)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 84, Col: 79}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</option>")
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(tema.NombreTema)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `Views/forms.templ`, Line: 100, Col: 79}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</option>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</select> <button type=\"submit\">Guardar Tarjeta</button></fieldset></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</select> <button type=\"submit\">Guardar Tarjeta</button></fieldset></form>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func TarjetaFormOOB(temas []sqlc.Tema) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var8 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var8 == nil {
+			templ_7745c5c3_Var8 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "<div id=\"form-tarjetas\" hx-swap-oob=\"true\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = TarjetaForm(temas).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

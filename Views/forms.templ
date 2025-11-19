@@ -5,13 +5,15 @@ import "fmt"
 
 // Renderiza el formulario para crear un nuevo Tema.
 // Apunta a POST /temas
+//hx-on::after-request="this.reset()" esto lo saquè pero tambien limpiaba el form mas simple.
+
 templ TemaForm() {
     // El action y method se reemplazan por los atributos hx-*
     <form 
+        id="form-temas"
         hx-post="/temas"
         hx-target="#lista-temas"
         hx-swap="outerHTML"
-        hx-on::after-request="this.reset()" 
 
     >
         <fieldset>
@@ -22,13 +24,22 @@ templ TemaForm() {
         </fieldset>
     </form>
 }
+
+// 2. Nuevo Componente OOB 
+// Este componente renderiza el formulario DE NUEVO, pero con el atributo form-temas
+templ TemaFormOOB() {
+    <div id="form-temas" hx-swap-oob="true">
+        @TemaForm()
+    </div>
+}
+
 // Renderiza el formulario para crear un nuevo Usuario.
 templ UsuarioForm() {
     <form 
+        id="form-usuarios"
         hx-post="/users"
         hx-target="#lista-usuarios"
         hx-swap="outerHTML"
-        hx-on::after-request="this.reset()" 
     >
         <fieldset>
             <legend>Crear Nuevo Usuario</legend>
@@ -47,17 +58,22 @@ templ UsuarioForm() {
     </form>
 }
 
+templ UsuarioFormOOB() {
+    <div id="form-usuarios" hx-swap-oob="true">
+        @UsuarioForm()
+    </div>
+}
+
 // Renderiza el formulario para crear una nueva Tarjeta.
-// Apunta a POST /tarjetas
 // Recibe los temas para poder renderizar un <select>
 //Para crear una Tarjeta, además de escribir la pregunta y las respuestas,
 // necesitas seleccionar un Tema existente al que esa tarjeta pertenecerá, por eso le paso sqlc.Tema.
 templ TarjetaForm(temas []sqlc.Tema) {
     <form 
+        id="form-tarjetas"
         hx-post="/tarjetas"
         hx-target="#lista-tarjetas"
         hx-swap="outerHTML"
-        hx-on::after-request="this.reset()" 
     >
         <fieldset>
             <legend>Crear Nueva Tarjeta</legend>
@@ -88,4 +104,10 @@ templ TarjetaForm(temas []sqlc.Tema) {
             <button type="submit">Guardar Tarjeta</button>
         </fieldset>
     </form>
+}
+
+templ TarjetaFormOOB(temas []sqlc.Tema) {
+    <div id="form-tarjetas" hx-swap-oob="true">
+        @TarjetaForm(temas)
+    </div>
 }

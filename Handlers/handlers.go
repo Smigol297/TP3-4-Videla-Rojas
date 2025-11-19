@@ -72,6 +72,7 @@ func (app *Application) HandleCreateTema(w http.ResponseWriter, r *http.Request)
 	}
 	//cambio HTMX
 	//http.Redirect(w, r, "/", http.StatusSeeOther)
+	//obtengo la lista actualizada de temas
 	temas, err := app.Queries.ListTemas(context.Background())
 	if err != nil {
 		log.Printf("Error listando temas post-creación: %v", err)
@@ -82,7 +83,13 @@ func (app *Application) HandleCreateTema(w http.ResponseWriter, r *http.Request)
 	// 2. Renderizamos y devolvemos SÓLO el componente de la lista.
 	// HTMX lo recibirá y lo pondrá en el hx-target="#lista-temas".
 	views.TemaList(temas).Render(r.Context(), w)
-	// --- FIN DEL CAMBIO HTMX ---
+	//renderizamos el FORMULARIO VACÍO (OOB)
+	// HTMX detectará el atributo hx-swap-oob="true" y buscará dónde ponerlo
+	views.TemaFormOOB().Render(r.Context(), w)
+	//  Actualizamos el FORMULARIO DE TARJETAS (OOB 2)
+	// Al renderizar esto, HTMX buscará el id="form-tarjetas" y lo reemplazará.
+	// Como le pasamos la lista 'temas' nueva, el <select> incluirá el nuevo tema.
+	views.TarjetaFormOOB(temas).Render(r.Context(), w)
 }
 
 func (app *Application) HandleCreateUsuario(w http.ResponseWriter, r *http.Request) {
@@ -120,7 +127,9 @@ func (app *Application) HandleCreateUsuario(w http.ResponseWriter, r *http.Reque
 	// 2. Renderizamos y devolvemos SÓLO el componente de la lista.
 	// HTMX lo recibirá y lo pondrá en el hx-target="#usuarios-temas".
 	views.UsuarioList(usuarios).Render(r.Context(), w)
-	// --- FIN DEL CAMBIO HTMX ---
+	//renderizamos el FORMULARIO VACÍO (OOB)
+	// HTMX detectará el atributo hx-swap-oob="true" y buscará dónde ponerlo
+	views.UsuarioFormOOB().Render(r.Context(), w)
 
 }
 
@@ -151,7 +160,29 @@ func (app *Application) HandleCreateTarjeta(w http.ResponseWriter, r *http.Reque
 		http.Error(w, "Error al crear tarjeta", http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	//http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	//obtengo la lista actualizada de tarjetas
+	tarjetas, err := app.Queries.ListTarjetas(context.Background())
+	if err != nil {
+		log.Printf("Error listando tarjetas post-creación: %v", err)
+		http.Error(w, "Error al obtener lista de tarjetas", http.StatusInternalServerError)
+		return
+	}
+
+	// 2. ¡FALTABA ESTO! Obtenemos la lista de TEMAS (Para el select del formulario)
+	temas, err := app.Queries.ListTemas(context.Background())
+	if err != nil {
+		log.Printf("Error listando temas: %v", err)
+		http.Error(w, "Error al obtener lista de temas", http.StatusInternalServerError)
+		return
+	}
+	// Renderizamos y devolvemos SÓLO el componente de la lista.
+	views.TarjetaList(tarjetas).Render(r.Context(), w)
+	//renderizamos el FORMULARIO VACÍO (OOB)
+	// HTMX detectará el atributo hx-swap-oob="true" y buscará dónde ponerlo
+	views.TarjetaFormOOB(temas).Render(r.Context(), w)
+
 }
 
 // --- Handlers de Eliminación (POST) ---
