@@ -41,9 +41,13 @@ func main() {
 	http.HandleFunc("/users", app.HandleCreateUsuario)
 	http.HandleFunc("/tarjetas", app.HandleCreateTarjeta)
 
-	http.HandleFunc("/temas/delete", app.HandleDeleteTema)
-	http.HandleFunc("/users/delete", app.HandleDeleteUsuario)
-	http.HandleFunc("/tarjetas/delete", app.HandleDeleteTarjeta)
+	//http.HandleFunc("/temas/delete", app.HandleDeleteTema)   ---antes---
+	//http.HandleFunc("/users/delete", app.HandleDeleteUsuario) ---antes
+	//http.HandleFunc("/tarjetas/delete", app.HandleDeleteTarjeta) ---antes---
+	/*Como en tu HandleDeleteTema ahora usas r.PathValue("id"), necesitas que la URL en el main.go tenga la parte /{id}.*/
+	http.HandleFunc("DELETE /temas/{id}", app.HandleDeleteTema)
+	http.HandleFunc("DELETE /users/{id}", app.HandleDeleteUsuario)
+	http.HandleFunc("DELETE /tarjetas/{id}", app.HandleDeleteTarjeta)
 
 	// 3. Iniciar el servidor (El antiguo 'InitServer')
 	log.Println("Iniciando servidor en http://localhost:8080")

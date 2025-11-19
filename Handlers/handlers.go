@@ -186,7 +186,7 @@ func (app *Application) HandleCreateTarjeta(w http.ResponseWriter, r *http.Reque
 }
 
 // --- Handlers de Eliminación (POST) ---
-func (app *Application) HandleDeleteTema(w http.ResponseWriter, r *http.Request) {
+/*func (app *Application) HandleDeleteTema(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 		return
@@ -202,40 +202,80 @@ func (app *Application) HandleDeleteTema(w http.ResponseWriter, r *http.Request)
 	}
 	app.Queries.DeleteTema(context.Background(), int32(id))
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}*/
+
+// --- Handlers de Eliminación (POST) CON HTMX---
+func (app *Application) HandleDeleteTema(w http.ResponseWriter, r *http.Request) {
+	// 1. YA NO miramos el formulario (ParseForm).
+	//    Ahora extraemos el ID directamente de la URL.
+	//    (Esto funciona gracias a la ruta "DELETE /temas/{id}" en main.go)
+	idStr := r.PathValue("id")
+
+	// Convertimos el texto de la URL a número
+	id, err := strconv.Atoi(idStr)
+	if err != nil || id <= 0 {
+		http.Error(w, "ID inválido o faltante", http.StatusBadRequest)
+		return
+	}
+	// 2. Borramos en la base de datos (Igual que antes)
+	err = app.Queries.DeleteTema(context.Background(), int32(id))
+	if err != nil {
+		http.Error(w, "Error al eliminar el tema", http.StatusInternalServerError)
+		return
+	}
+	// 3. CAMBIO CRUCIAL: No hacemos Redirect.
+	//    Devolvemos un 200 OK con cuerpo vacío.
+	//    HTMX recibirá "nada" y reemplazará el elemento de la lista con "nada".
+	temas, err := app.Queries.ListTemas(context.Background()) // Obtenemos la lista actualizada de temas
+	if err != nil {
+		// Si falla esto, al menos devolvemos OK para que se borre visualmente
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// 3. Renderizamos el Formulario de Tarjetas (OOB)
+	//    HTMX tomará este bloque, buscará el id="form-tarjetas" y lo actualizará.
+	//    Como el resto de la respuesta es "solo este bloque OOB",
+	//    el objetivo original (el <li> del tema) se reemplazará por "nada" (se borra).
+	views.TarjetaFormOOB(temas).Render(r.Context(), w)
 }
 
 func (app *Application) HandleDeleteUsuario(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Error al parsear formulario", http.StatusBadRequest)
-		return
-	}
-	id, _ := strconv.Atoi(r.FormValue("id"))
-	if id <= 0 {
+	// 1. Leer ID de la URL
+	idStr := r.PathValue("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil || id <= 0 {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
-	app.Queries.DeleteUsuario(context.Background(), int32(id))
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	// 2. Borrar en DB
+	err = app.Queries.DeleteUsuario(context.Background(), int32(id))
+	if err != nil {
+		http.Error(w, "Error al eliminar usuario", http.StatusInternalServerError)
+		return
+	}
+
+	// 3. Respuesta Vacía
+	w.WriteHeader(http.StatusOK)
 }
 
 func (app *Application) HandleDeleteTarjeta(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "Error al parsear formulario", http.StatusBadRequest)
-		return
-	}
-	id, _ := strconv.Atoi(r.FormValue("id"))
-	if id <= 0 {
+	// 1. Leer ID de la URL
+	idStr := r.PathValue("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil || id <= 0 {
 		http.Error(w, "ID inválido", http.StatusBadRequest)
 		return
 	}
-	app.Queries.DeleteTarjeta(context.Background(), int32(id))
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	// 2. Borrar en DB
+	err = app.Queries.DeleteTarjeta(context.Background(), int32(id))
+	if err != nil {
+		http.Error(w, "Error al eliminar tarjeta", http.StatusInternalServerError)
+		return
+	}
+
+	// 3. Respuesta Vacía
+	w.WriteHeader(http.StatusOK)
 }

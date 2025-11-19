@@ -5,13 +5,11 @@ package views
 
 //lint:file-ignore SA4006 This context is only used if a nested component is present.
 
-import (
-	"github.com/a-h/templ"
-	templruntime "github.com/a-h/templ/runtime"
+import "github.com/a-h/templ"
+import templruntime "github.com/a-h/templ/runtime"
 
-	"fmt"
-	sqlc "tp3/db"
-)
+import sqlc "tp3/db"
+import "fmt"
 
 // Renderiza el formulario para crear un nuevo Tema.
 // Apunta a POST /temas
