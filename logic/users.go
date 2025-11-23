@@ -41,7 +41,6 @@ func ValidateUpdateUser(p sqlc.UpdateUsuarioParams) error {
 }
 
 func getUsers(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
-	w.Header().Set("Content-Type", "application/json")
 
 	ctx := context.Background()
 	usuarios, err := queries.ListUsuarios(ctx)
@@ -49,11 +48,21 @@ func getUsers(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// Enviar los datos como JSON válido
+	//Preparar la respuesta HTTP
+	//le digo al navegador que le voy a mandar JSON
+	w.Header().Set("Content-Type", "application/json")
+	// Enviar los datos al cliente como JSON válido
+	//w.WriteHeader(http.StatusOK) redundante, pero explícito y válido.
+	// Encode convierte la struct 'usuarios' ([]Usuario) a texto JSON y lo escribe en 'w'.
 	if err := json.NewEncoder(w).Encode(usuarios); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	//con el encode...
+	// Go, internamente, hizo esto:
+	// w.WriteHeader(http.StatusOK)  <-- ¡Lo agregó él solo!
+	// WriteHeader sirve para Enviar el Código de Estado HTTP al navegador.
+	// w.Write(datos_json)
 }
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	db := connectDB()
@@ -72,9 +81,10 @@ func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func createUser(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
-	var p sqlc.CreateUsuarioParams
+	var p sqlc.CreateUsuarioParams // Estructura vacía para llenar con datos.
 
-	// decodificar JSON
+	//  Decodificar (Leer el JSON que envió el cliente)
+    // r.Body es el flujo de datos que llega. Decode intenta meterlo en la variable 'p'.
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
 		http.Error(w, "JSON inválido", http.StatusBadRequest)
@@ -86,7 +96,7 @@ func createUser(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// crear usuario en la base de datos
+	// crear usuario en la base de datos con los datos de 'p'
 	ctx := context.Background()
 	newUsuario, err := queries.CreateUsuario(ctx, p)
 	if err != nil {

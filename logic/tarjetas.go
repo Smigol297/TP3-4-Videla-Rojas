@@ -68,10 +68,11 @@ func TarjetasHandler(w http.ResponseWriter, r *http.Request) {
 		temaStr := r.URL.Query().Get("tema") // obtiene el parámetro "tema"
 		//GET /tarjetas
 		if temaStr == "" {
+			// Caso A: La URL es "/tarjetas". No hay tema, traemos TODAS.
 			getTarjetas(w, r, queries)
 			return
 		}
-
+		// Caso B: La URL es "/tarjetas?tema=5". Hay tema, traemos las de ese tema.
 		tema, err := strconv.Atoi(temaStr)
 		if err != nil {
 			http.Error(w, "ID de tarjeta inválido", http.StatusBadRequest)
@@ -86,6 +87,10 @@ func TarjetasHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 	}
 }
+
+/*r.URL.Query().Get("tema"): Esta función inspecciona la URL buscando lo que está después del signo de interrogación ?.
+  Si la URL es http://localhost:8080/tarjetas, devuelve vacío "".
+  Si la URL es http://localhost:8080/tarjetas?tema=10, devuelve "10".*/
 
 func getTarjetas(w http.ResponseWriter, r *http.Request, queries *sqlc.Queries) {
 	w.Header().Set("Content-Type", "application/json")
@@ -154,7 +159,7 @@ func TarjetasByIDHandler(w http.ResponseWriter, r *http.Request) {
 	db := connectDB()
 	defer db.Close()
 	queries := sqlc.New(db)
-	// Extraer el ID del usuario de la URL
+	// Extraer el ID de la tarjeta de la URL
 	var id int
 	_, err := fmt.Sscanf(r.URL.Path, "/tarjetas/%d", &id)
 	if err != nil {
